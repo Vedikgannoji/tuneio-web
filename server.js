@@ -40,13 +40,17 @@ const ALLOWLIST = new Map([
   ['/styles.css', 'styles.css'],
   ['/app.js', 'app.js'],
   ['/gradient-ascii.js', 'gradient-ascii.js'],
-  ['/wordmark.svg', 'wordmark.svg']
+  ['/wordmark.svg', 'wordmark.svg'],
+  ['/tuneio-walkthrough.pdf', 'docs/tuneio-walkthrough.pdf']
 ]);
 
 app.get('*', (req, res) => {
   const file = ALLOWLIST.get(req.path);
   if (!file) {
     return res.status(404).type('text/plain').send('Not Found');
+  }
+  if (req.path === '/tuneio-walkthrough.pdf') {
+    res.setHeader('Content-Disposition', 'attachment; filename="tuneio-walkthrough.pdf"');
   }
   return res.sendFile(join(__dirname, file), { maxAge: '1h' });
 });

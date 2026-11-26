@@ -233,6 +233,38 @@ import { initGradientASCII } from './gradient-ascii.js';
     }
   }
 
+  // --- Walkthrough PDF Download Toast ---
+  const walkthroughToast = document.getElementById('walkthrough-toast');
+  const walkthroughToastClose = document.getElementById('walkthrough-toast-close');
+  let toastTimer = null;
+
+  function showWalkthroughToast() {
+    if (!walkthroughToast) return;
+    walkthroughToast.hidden = false;
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      walkthroughToast.hidden = true;
+      toastTimer = null;
+    }, 7000);
+  }
+
+  function dismissWalkthroughToast() {
+    if (!walkthroughToast || walkthroughToast.hidden) return;
+    walkthroughToast.hidden = true;
+    if (toastTimer) {
+      clearTimeout(toastTimer);
+      toastTimer = null;
+    }
+  }
+
+  document.querySelectorAll('[data-walkthrough-download]').forEach(link => {
+    link.addEventListener('click', () => {
+      showWalkthroughToast();
+    });
+  });
+
+  walkthroughToastClose?.addEventListener('click', dismissWalkthroughToast);
+
   mobileMenuBtn?.addEventListener('click', () => {
     if (isMenuOpen) closeMobileMenu(true);
     else openMobileMenu();
@@ -246,6 +278,10 @@ import { initGradientASCII } from './gradient-ascii.js';
   });
 
   document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !isMenuOpen && walkthroughToast && !walkthroughToast.hidden) {
+      dismissWalkthroughToast();
+      return;
+    }
     if (!isMenuOpen) return;
     if (e.key === 'Escape') {
       e.preventDefault();

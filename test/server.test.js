@@ -31,6 +31,11 @@ test('allowlisted static assets are served properly', async () => {
   const svg = await fetch(`${BASE_URL}/wordmark.svg`);
   assert.equal(svg.status, 200);
   assert.ok(svg.headers.get('content-type').includes('image/svg+xml'));
+
+  const pdf = await fetch(`${BASE_URL}/tuneio-walkthrough.pdf`);
+  assert.equal(pdf.status, 200);
+  assert.ok(pdf.headers.get('content-type').includes('application/pdf'));
+  assert.ok(pdf.headers.get('content-disposition')?.includes('tuneio-walkthrough.pdf'));
 });
 
 test('non-allowlisted source and config paths return 404', async () => {

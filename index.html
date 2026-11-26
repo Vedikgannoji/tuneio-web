@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tuneio — Monitor your APIs. Speed them up with adaptive caching.</title>
+  <meta name="description" content="tuneio is an open-source, terminal-first tool for monitoring HTTP APIs and improving performance with adaptive caching.">
+  <meta name="theme-color" content="#ffffff">
+  
+  <!-- Favicon using tuneio pixel logo -->
+  <link rel="icon" type="image/svg+xml" href="wordmark.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Skip to Main Content for Accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ARIA Live region for screen-reader announcements (e.g. copy feedback) -->
+  <div id="a11y-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Header: Apple Translucent Glass Navigation -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a href="#" class="brand-link" aria-label="tuneio home">
+        <!-- Exact CLI 5x5 pixel-block wordmark in Royal Purple gradient (standalone logo) -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 5" shape-rendering="crispEdges" aria-hidden="true" class="wordmark-svg">
+          <rect x="1" y="0" width="1" height="1" fill="#8b5cf6"/><rect x="1" y="1" width="1" height="1" fill="#7c3aed"/>
+          <rect x="0" y="2" width="1" height="1" fill="#6d28d9"/><rect x="1" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="2" y="2" width="1" height="1" fill="#6d28d9"/><rect x="3" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="1" y="3" width="1" height="1" fill="#5b21b6"/><rect x="2" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="3" y="4" width="1" height="1" fill="#4c1d95"/><rect x="4" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="6" y="2" width="1" height="1" fill="#6d28d9"/><rect x="10" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="6" y="3" width="1" height="1" fill="#5b21b6"/><rect x="10" y="3" width="1" height="1" fill="#5b21b6"/>
+          <rect x="7" y="4" width="1" height="1" fill="#4c1d95"/><rect x="8" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="9" y="4" width="1" height="1" fill="#4c1d95"/><rect x="10" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="12" y="2" width="1" height="1" fill="#6d28d9"/><rect x="13" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="14" y="2" width="1" height="1" fill="#6d28d9"/><rect x="15" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="12" y="3" width="1" height="1" fill="#5b21b6"/><rect x="16" y="3" width="1" height="1" fill="#5b21b6"/>
+          <rect x="12" y="4" width="1" height="1" fill="#4c1d95"/><rect x="16" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="19" y="1" width="1" height="1" fill="#7c3aed"/><rect x="20" y="1" width="1" height="1" fill="#7c3aed"/>
+          <rect x="21" y="1" width="1" height="1" fill="#7c3aed"/><rect x="18" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="19" y="2" width="1" height="1" fill="#6d28d9"/><rect x="20" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="21" y="2" width="1" height="1" fill="#6d28d9"/><rect x="22" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="18" y="3" width="1" height="1" fill="#5b21b6"/><rect x="19" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="20" y="4" width="1" height="1" fill="#4c1d95"/><rect x="21" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="26" y="0" width="1" height="1" fill="#8b5cf6"/><rect x="25" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="26" y="2" width="1" height="1" fill="#6d28d9"/><rect x="26" y="3" width="1" height="1" fill="#5b21b6"/>
+          <rect x="25" y="4" width="1" height="1" fill="#4c1d95"/><rect x="26" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="27" y="4" width="1" height="1" fill="#4c1d95"/><rect x="31" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="32" y="2" width="1" height="1" fill="#6d28d9"/><rect x="33" y="2" width="1" height="1" fill="#6d28d9"/>
+          <rect x="30" y="3" width="1" height="1" fill="#5b21b6"/><rect x="34" y="3" width="1" height="1" fill="#5b21b6"/>
+          <rect x="31" y="4" width="1" height="1" fill="#4c1d95"/><rect x="32" y="4" width="1" height="1" fill="#4c1d95"/>
+          <rect x="33" y="4" width="1" height="1" fill="#4c1d95"/>
+        </svg>
+      </a>
+
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#install">Install</a></li>
+          <li>
+            <a href="https://github.com/Vedikgannoji/tuneio" class="github-link" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              <span>GitHub</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main id="main-content">
+    
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero" aria-labelledby="hero-heading">
+      <!-- GradientASCII Full-Bleed Background -->
+      <div class="hero-ascii-bg" id="hero-gradient-ascii" aria-hidden="true"></div>
+
+      <div class="container hero-content">
+        <h1 class="hero-headline" id="hero-heading">
+          Monitor your APIs. Speed them up with adaptive caching.
+        </h1>
+
+        <p class="hero-supporting">
+          See where requests slow down, choose what to cache, and measure the difference. All from your terminal.
+        </p>
+
+        <div class="hero-actions">
+          <!-- Prominent copyable pip command -->
+          <div class="quick-install-box" role="region" aria-label="Quick install command">
+            <div class="quick-install-command">
+              <span class="prompt-symbol" aria-hidden="true">$</span>
+              <code id="hero-install-cmd">pip install tuneio</code>
+            </div>
+            <button 
+              type="button" 
+              class="copy-btn" 
+              id="hero-copy-btn"
+              data-clipboard-target="#hero-install-cmd"
+              aria-label="Copy pip install tuneio command">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="copy-label">Copy</span>
+            </button>
+          </div>
+
+          <!-- Action buttons -->
+          <div class="hero-buttons">
+            <a href="#install" class="btn-primary">
+              <span>Get started</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M6 3l5 5-5 5"/>
+              </svg>
+            </a>
+            <a href="https://github.com/Vedikgannoji/tuneio" class="btn-secondary" target="_blank" rel="noopener noreferrer">
+              <span>View on GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: What tuneio does (Three concise feature cards) -->
+    <section class="features-section" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-eyebrow">architecture & workflow</div>
+          <h2 class="section-title" id="features-heading">What tuneio does</h2>
+          <p class="section-subtitle">
+            A lightweight, local HTTP proxy designed for finite inspection, intentional caching, and rigorous before-and-after verification.
+          </p>
+        </div>
+
+        <div class="feature-cards-grid">
+          
+          <!-- Card 1: Live API monitoring -->
+          <article class="feature-card">
+            <div class="feature-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Live API monitoring</h3>
+            <p class="feature-card-copy">
+              See request volume, latency, and errors by endpoint as traffic passes through tuneio’s local proxy.
+            </p>
+            <div class="feature-card-footer">
+              <code>tuneio monitor</code>
+            </div>
+          </article>
+
+          <!-- Card 2: Adaptive caching you approve -->
+          <article class="feature-card">
+            <div class="feature-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Adaptive caching you approve</h3>
+            <p class="feature-card-copy">
+              Review which public GET responses can be cached and which writes should invalidate them.
+            </p>
+            <div class="feature-card-footer">
+              <code>tuneio optimize enable</code>
+            </div>
+          </article>
+
+          <!-- Card 3: Before-and-after comparisons -->
+          <article class="feature-card">
+            <div class="feature-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M18 20V10"></path>
+                <path d="M12 20V4"></path>
+                <path d="M6 20v-6"></path>
+              </svg>
+            </div>
+            <h3 class="feature-card-title">Before-and-after comparisons</h3>
+            <p class="feature-card-copy">
+              Repeat the same GET workload and compare latency and cache hits.
+            </p>
+            <div class="feature-card-footer">
+              <code>tuneio compare</code>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Get Started / Installation Tabs -->
+    <section class="install-section" id="install" aria-labelledby="install-heading">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-eyebrow">setup in seconds</div>
+          <h2 class="section-title" id="install-heading">Get started with tuneio</h2>
+          <p class="section-subtitle">
+            Install the CLI using your preferred Python package manager.
+          </p>
+        </div>
+
+        <div class="install-card">
+          <!-- Installer Tabs -->
+          <div class="installer-tabs-header">
+            <ul class="installer-tabs-list" role="tablist" aria-label="Package manager choices">
+              <li role="presentation">
+                <button 
+                  type="button" 
+                  class="installer-tab-btn" 
+                  id="tab-pip" 
+                  role="tab" 
+                  aria-selected="true" 
+                  aria-controls="panel-install" 
+                  data-tool="pip">
+                  pip
+                </button>
+              </li>
+              <li role="presentation">
+                <button 
+                  type="button" 
+                  class="installer-tab-btn" 
+                  id="tab-pipx" 
+                  role="tab" 
+                  aria-selected="false" 
+                  aria-controls="panel-install" 
+                  data-tool="pipx">
+                  pipx
+                </button>
+              </li>
+              <li role="presentation">
+                <button 
+                  type="button" 
+                  class="installer-tab-btn" 
+                  id="tab-uv" 
+                  role="tab" 
+                  aria-selected="false" 
+                  aria-controls="panel-install" 
+                  data-tool="uv">
+                  uv
+                </button>
+              </li>
+            </ul>
+
+            <span style="font-size: 0.8125rem; color: var(--color-text-dim); font-weight: 600;">Python 3.11+</span>
+          </div>
+
+          <!-- Active Command Display with Single Copy Button -->
+          <div class="installer-command-display" id="panel-install" role="tabpanel" aria-labelledby="tab-pip">
+            <div class="installer-command-text">
+              <span class="prompt-symbol" aria-hidden="true">$</span>
+              <code id="active-install-cmd">pip install tuneio</code>
+            </div>
+
+            <button 
+              type="button" 
+              class="copy-btn" 
+              id="install-copy-btn"
+              data-clipboard-target="#active-install-cmd"
+              aria-label="Copy active install command">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="copy-label">Copy command</span>
+            </button>
+          </div>
+
+          <!-- Virtualenv Note for pip -->
+          <p class="install-note" id="install-pip-note">
+            When installing with pip, use an activated virtual environment (such as <code>.venv</code>).
+          </p>
+
+          <!-- Launch Step Box -->
+          <div class="next-step-box">
+            <div class="next-step-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Launch command</span>
+            </div>
+            
+            <div class="launch-command-line">
+              <div>
+                <span class="prompt-symbol" aria-hidden="true">$</span>
+                <code id="launch-cmd">tuneio</code>
+              </div>
+              <button 
+                type="button" 
+                class="launch-copy-btn" 
+                id="launch-copy-btn"
+                data-clipboard-target="#launch-cmd"
+                aria-label="Copy launch command tuneio">
+                copy
+              </button>
+            </div>
+
+            <p style="font-size: 0.8125rem; color: var(--color-text-muted); margin-top: 4px;">
+              Run <code>tuneio</code> from the project folder you want to work in.
+            </p>
+          </div>
+
+          <!-- Documentation Link Box -->
+          <div class="docs-link-box">
+            <span style="color: var(--color-text-muted);">Looking for the complete walkthrough?</span>
+            <a href="https://github.com/Vedikgannoji/tuneio#readme" target="_blank" rel="noopener noreferrer">
+              <span>Read Documentation</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Section 5: Footer (Apple Clean Light Footer) -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        
+        <div class="footer-brand">
+          <a href="#" class="brand-link" aria-label="tuneio home">
+            <!-- Exact CLI 5x5 pixel-block wordmark in Royal Purple gradient (standalone logo) -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 5" shape-rendering="crispEdges" aria-hidden="true" class="wordmark-svg">
+              <rect x="1" y="0" width="1" height="1" fill="#8b5cf6"/><rect x="1" y="1" width="1" height="1" fill="#7c3aed"/>
+              <rect x="0" y="2" width="1" height="1" fill="#6d28d9"/><rect x="1" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="2" y="2" width="1" height="1" fill="#6d28d9"/><rect x="3" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="1" y="3" width="1" height="1" fill="#5b21b6"/><rect x="2" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="3" y="4" width="1" height="1" fill="#4c1d95"/><rect x="4" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="6" y="2" width="1" height="1" fill="#6d28d9"/><rect x="10" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="6" y="3" width="1" height="1" fill="#5b21b6"/><rect x="10" y="3" width="1" height="1" fill="#5b21b6"/>
+              <rect x="7" y="4" width="1" height="1" fill="#4c1d95"/><rect x="8" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="9" y="4" width="1" height="1" fill="#4c1d95"/><rect x="10" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="12" y="2" width="1" height="1" fill="#6d28d9"/><rect x="13" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="14" y="2" width="1" height="1" fill="#6d28d9"/><rect x="15" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="12" y="3" width="1" height="1" fill="#5b21b6"/><rect x="16" y="3" width="1" height="1" fill="#5b21b6"/>
+              <rect x="12" y="4" width="1" height="1" fill="#4c1d95"/><rect x="16" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="19" y="1" width="1" height="1" fill="#7c3aed"/><rect x="20" y="1" width="1" height="1" fill="#7c3aed"/>
+              <rect x="21" y="1" width="1" height="1" fill="#7c3aed"/><rect x="18" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="19" y="2" width="1" height="1" fill="#6d28d9"/><rect x="20" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="21" y="2" width="1" height="1" fill="#6d28d9"/><rect x="22" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="18" y="3" width="1" height="1" fill="#5b21b6"/><rect x="19" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="20" y="4" width="1" height="1" fill="#4c1d95"/><rect x="21" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="26" y="0" width="1" height="1" fill="#8b5cf6"/><rect x="25" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="26" y="2" width="1" height="1" fill="#6d28d9"/><rect x="26" y="3" width="1" height="1" fill="#5b21b6"/>
+              <rect x="25" y="4" width="1" height="1" fill="#4c1d95"/><rect x="26" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="27" y="4" width="1" height="1" fill="#4c1d95"/><rect x="31" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="32" y="2" width="1" height="1" fill="#6d28d9"/><rect x="33" y="2" width="1" height="1" fill="#6d28d9"/>
+              <rect x="30" y="3" width="1" height="1" fill="#5b21b6"/><rect x="34" y="3" width="1" height="1" fill="#5b21b6"/>
+              <rect x="31" y="4" width="1" height="1" fill="#4c1d95"/><rect x="32" y="4" width="1" height="1" fill="#4c1d95"/>
+              <rect x="33" y="4" width="1" height="1" fill="#4c1d95"/>
+            </svg>
+          </a>
+          <p class="footer-desc">
+            An open-source, terminal-first tool for observing HTTP APIs and applying reviewed adaptive caching.
+          </p>
+        </div>
+
+        <nav class="footer-nav" aria-label="Footer links">
+          <div class="footer-col">
+            <span class="footer-col-title">Project</span>
+            <ul>
+              <li><a href="https://github.com/Vedikgannoji/tuneio" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://pypi.org/project/tuneio/" target="_blank" rel="noopener noreferrer">PyPI</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <span class="footer-col-title">Resources</span>
+            <ul>
+              <li><a href="https://github.com/Vedikgannoji/tuneio#readme" target="_blank" rel="noopener noreferrer">Documentation</a></li>
+              <li><a href="https://github.com/Vedikgannoji/tuneio/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT license</a></li>
+            </ul>
+          </div>
+        </nav>
+
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <span>Open-source HTTP API monitoring and adaptive caching.</span>
+        </div>
+        <div>
+          <a href="https://github.com/Vedikgannoji/tuneio/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" style="color: var(--color-text-dim);">
+            Distributed under the MIT license
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

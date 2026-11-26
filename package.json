@@ -1,0 +1,24 @@
+{
+  "name": "tuneio-web",
+  "version": "1.0.0",
+  "description": "Product website and backend for tuneio — terminal-first HTTP API proxy with adaptive caching",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "tuneio",
+    "api-monitoring",
+    "adaptive-caching",
+    "http-proxy",
+    "developer-tools"
+  ],
+  "author": "Vedik Gannoji",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

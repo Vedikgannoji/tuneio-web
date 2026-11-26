@@ -15,7 +15,7 @@ import { initGradientASCII } from './gradient-ascii.js';
   const heroAsciiContainer = document.getElementById('hero-gradient-ascii');
   if (heroAsciiContainer) {
     try {
-      initGradientASCII(heroAsciiContainer, {
+      const asciiInstance = initGradientASCII(heroAsciiContainer, {
         colors: ['#6722dc', '#f6f8ff'],
         shape: 'horizon',
         characters: ' .·•●',
@@ -27,8 +27,9 @@ import { initGradientASCII } from './gradient-ascii.js';
         intro: true,
         lightMode: false
       });
+      document.documentElement.setAttribute('data-hero-ascii', asciiInstance ? 'on' : 'off');
     } catch {
-      // CSS fallback gradient on .hero-section handles non-WebGL2 environments
+      document.documentElement.setAttribute('data-hero-ascii', 'off');
     }
   }
 
@@ -101,7 +102,6 @@ import { initGradientASCII } from './gradient-ascii.js';
 
   // --- Adaptive Navbar, Scroll-Progress & Ambient Glow ---
   const header = document.getElementById('site-header');
-  const heroSection = document.getElementById('hero');
   const heroButtons = document.getElementById('hero-buttons');
   const navCta = document.getElementById('nav-cta');
   const navIndicator = document.getElementById('nav-indicator');
@@ -111,9 +111,30 @@ import { initGradientASCII } from './gradient-ascii.js';
   const mobileCloseBtn = document.getElementById('mobile-nav-close');
   const mobileBackdrop = document.getElementById('mobile-nav-backdrop');
 
+  const SCROLL_THRESHOLD = 40;
+  let activeSpySection = null;
   let isMenuOpen = false;
   let lastScrollY = window.scrollY;
   let scrollTicking = false;
+
+  function setActiveSpyLink(sectionId) {
+    activeSpySection = sectionId;
+    let activeLink = null;
+    navSpyLinks.forEach(link => {
+      const matches = link.getAttribute('data-section') === sectionId;
+      link.classList.toggle('is-active', matches);
+      if (matches) activeLink = link;
+    });
+    if (navIndicator) {
+      if (activeLink) {
+        navIndicator.style.width = `${activeLink.offsetWidth}px`;
+        navIndicator.style.transform = `translateX(${activeLink.offsetLeft}px)`;
+        navIndicator.classList.add('is-visible');
+      } else {
+        navIndicator.classList.remove('is-visible');
+      }
+    }
+  }
 
   function updateScrollMetrics() {
     scrollTicking = false;
@@ -131,6 +152,13 @@ import { initGradientASCII } from './gradient-ascii.js';
     }
 
     if (header) {
+      const shouldBeScrolled = scrollY > SCROLL_THRESHOLD;
+      const wasScrolled = header.classList.contains('is-scrolled');
+      if (shouldBeScrolled !== wasScrolled) {
+        header.classList.toggle('is-scrolled', shouldBeScrolled);
+        window.requestAnimationFrame(() => setActiveSpyLink(activeSpySection));
+      }
+
       const navHasFocus = header.contains(document.activeElement);
       const delta = scrollY - lastScrollY;
       if (scrollY <= 80 || isMenuOpen || navHasFocus) {
@@ -150,15 +178,8 @@ import { initGradientASCII } from './gradient-ascii.js';
       window.requestAnimationFrame(updateScrollMetrics);
     }
   }, { passive: true });
+  window.addEventListener('resize', () => setActiveSpyLink(activeSpySection), { passive: true });
   updateScrollMetrics();
-
-  if (header && heroSection && 'IntersectionObserver' in window) {
-    const heroObserver = new IntersectionObserver(entries => {
-      const heroInView = entries.some(entry => entry.isIntersecting);
-      header.classList.toggle('is-scrolled', !heroInView);
-    }, { rootMargin: '-96px 0px 0px 0px', threshold: 0 });
-    heroObserver.observe(heroSection);
-  }
 
   if (heroButtons && navCta && 'IntersectionObserver' in window) {
     const ctaObserver = new IntersectionObserver(entries => {
@@ -167,24 +188,6 @@ import { initGradientASCII } from './gradient-ascii.js';
       navCta.tabIndex = buttonsVisible ? -1 : 0;
     }, { threshold: 0 });
     ctaObserver.observe(heroButtons);
-  }
-
-  function setActiveSpyLink(sectionId) {
-    let activeLink = null;
-    navSpyLinks.forEach(link => {
-      const matches = link.getAttribute('data-section') === sectionId;
-      link.classList.toggle('is-active', matches);
-      if (matches) activeLink = link;
-    });
-    if (navIndicator) {
-      if (activeLink) {
-        navIndicator.style.width = `${activeLink.offsetWidth}px`;
-        navIndicator.style.transform = `translateX(${activeLink.offsetLeft}px)`;
-        navIndicator.classList.add('is-visible');
-      } else {
-        navIndicator.classList.remove('is-visible');
-      }
-    }
   }
 
   if ('IntersectionObserver' in window) {

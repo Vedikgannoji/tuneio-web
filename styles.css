@@ -223,6 +223,39 @@ main {
   transform: translateY(-100%);
 }
 
+/* Over-hero state when GradientASCII is active */
+[data-hero-ascii="on"] .site-header:not(.is-scrolled) {
+  --wm-1: #5b21b6;
+  --wm-2: #4c1d95;
+  --wm-3: #3b0764;
+  --wm-4: #2e1065;
+}
+
+[data-hero-ascii="on"] .site-header:not(.is-scrolled) .nav-links a {
+  color: #4c1d95;
+}
+
+[data-hero-ascii="on"] .site-header:not(.is-scrolled) .nav-links a:hover,
+[data-hero-ascii="on"] .site-header:not(.is-scrolled) .nav-links a.is-active {
+  color: #2e1065;
+}
+
+[data-hero-ascii="on"] .site-header:not(.is-scrolled) .nav-indicator {
+  background: #4c1d95;
+}
+
+[data-hero-ascii="on"] .site-header:not(.is-scrolled) .nav-menu-btn {
+  color: #3b0764;
+  background: rgba(76, 29, 149, 0.08);
+  border-color: rgba(76, 29, 149, 0.28);
+}
+
+/* Hide GitHub pill and reserve no space for nav CTA while header is over the hero */
+.site-header:not(.is-scrolled) .nav-item-github,
+.site-header:not(.is-scrolled) .nav-cta {
+  display: none;
+}
+
 .nav-scroll-progress {
   position: absolute;
   left: 0;
@@ -332,10 +365,16 @@ main {
   color: var(--color-accent-soft-text);
 }
 
-.nav-links svg {
+.github-icon {
   width: 15px;
   height: 15px;
   fill: currentColor;
+  flex-shrink: 0;
+}
+
+.github-icon--hero {
+  width: 16px;
+  height: 16px;
 }
 
 .nav-cta {
@@ -350,13 +389,15 @@ main {
   border-radius: var(--radius-full);
   white-space: nowrap;
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(-4px);
-  transition: opacity var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-fast);
+  transition: opacity var(--transition-normal), transform var(--transition-normal), box-shadow var(--transition-fast), visibility var(--transition-normal);
 }
 
 .nav-cta.is-visible {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: translateY(0);
 }
@@ -482,14 +523,23 @@ main {
 .hero-section {
   position: relative;
   overflow: hidden;
-  min-height: 640px;
+  min-height: max(640px, 100svh);
   display: flex;
-  align-items: center;
-  padding: 136px 0 116px;
+  flex-direction: column;
+  padding: 64px 0 36px;
   background-color: var(--color-bg-base);
+}
+
+[data-hero-ascii="off"] .hero-section {
   background-image:
-    radial-gradient(ellipse 85% 60% at 62% 28%, rgba(124, 58, 237, 0.28), transparent 65%),
-    radial-gradient(ellipse 65% 45% at 24% 68%, rgba(110, 68, 255, 0.16), transparent 65%);
+    radial-gradient(ellipse 85% 60% at 50% 24%, rgba(124, 58, 237, 0.34), transparent 66%),
+    radial-gradient(ellipse 65% 45% at 50% 58%, rgba(110, 68, 255, 0.18), transparent 70%);
+}
+
+.hero-section > .container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-ascii-bg,
@@ -512,56 +562,72 @@ main {
   display: block;
 }
 
-/* Contrast scrim behind hero copy + top nav + seamless fade into #08070f */
+/* Seamless bottom fade into next section (lowest ~25% only; no tint over canvas) */
 .hero-scrim {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(ellipse 75% 70% at 24% 48%, rgba(8, 7, 15, 0.82) 0%, rgba(8, 7, 15, 0.45) 55%, transparent 82%),
-    linear-gradient(to bottom, rgba(8, 7, 15, 0.62) 0%, rgba(8, 7, 15, 0.18) 20%, transparent 42%, transparent 66%, var(--color-bg-base) 100%);
+  background: linear-gradient(to bottom, transparent 75%, var(--color-bg-base) 100%);
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 640px;
+  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  text-align: center;
+}
+
+.hero-copy {
+  max-width: 780px;
+  margin: clamp(180px, 41svh, 380px) auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
 }
 
 .hero-headline {
-  font-size: 3.25rem;
+  font-size: clamp(2.35rem, 3.25vw, 3rem);
   font-weight: 800;
   line-height: 1.08;
-  color: var(--color-text-title);
+  color: #ffffff;
   letter-spacing: -0.035em;
-  text-shadow: 0 2px 24px rgba(8, 7, 15, 0.65);
+  text-shadow: 0 1px 6px rgba(8, 7, 15, 0.35);
 }
 
 .hero-supporting {
-  font-size: 1.1875rem;
-  color: rgba(245, 243, 255, 0.84);
+  max-width: 580px;
+  font-size: 1.125rem;
+  color: #f5f3ff;
   line-height: 1.55;
   font-weight: 400;
-  text-shadow: 0 1px 16px rgba(8, 7, 15, 0.7);
+  text-shadow: 0 1px 6px rgba(8, 7, 15, 0.35);
 }
 
 .hero-actions {
+  width: 100%;
+  max-width: 560px;
+  margin: auto auto 0;
+  padding-top: 28px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  margin-top: 6px;
+  align-items: center;
+  gap: 14px;
 }
 
 .quick-install-box {
+  width: 100%;
+  max-width: 560px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: rgba(15, 13, 26, 0.76);
+  background: rgba(15, 13, 26, 0.78);
   border: 1px solid var(--color-border-base);
   border-radius: var(--radius-md);
   padding: 10px 14px;
@@ -662,6 +728,7 @@ main {
 .hero-buttons {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -1451,10 +1518,6 @@ main {
    Responsive Breakpoints (1024 / 768 / 480)
    ========================================================================== */
 @media (max-width: 1024px) {
-  .hero-section {
-    min-height: 540px;
-  }
-
   .hero-headline {
     font-size: 2.5rem;
   }
@@ -1481,6 +1544,16 @@ main {
 }
 
 @media (max-width: 768px) {
+  [data-hero-ascii="on"] .site-header:not(.is-scrolled) {
+    --wm-1: #2e1065;
+    --wm-2: #2e1065;
+    --wm-3: #1e0a3c;
+    --wm-4: #1e0a3c;
+  }
+
+  [data-hero-ascii="on"] .site-header:not(.is-scrolled) .nav-menu-btn {
+    color: #2e1065;
+  }
 
   .nav-links-wrap,
   .nav-cta {
@@ -1492,8 +1565,12 @@ main {
   }
 
   .hero-section {
-    padding: 112px 0 80px;
-    min-height: 480px;
+    padding: 58px 0 28px;
+  }
+
+  .hero-copy {
+    margin-top: clamp(190px, 39svh, 330px);
+    gap: 14px;
   }
 
   .hero-headline {
@@ -1559,13 +1636,8 @@ main {
   }
 
   .quick-install-box {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .copy-btn--hero {
-    width: 100%;
+    padding: 9px 12px;
+    font-size: 0.875rem;
   }
 
   .installer-command-display {

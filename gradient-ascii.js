@@ -691,7 +691,6 @@ export function initGradientASCII(container, options = {}) {
     gl.uniform1f(cu.uFrame, frameSeed);
     if (!window._ascii_frame_drawn) {
       window._ascii_frame_drawn = true;
-      console.log('[tuneio ASCII] First frame rendered to canvas!', canvas.width, 'x', canvas.height);
     }
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   };
@@ -818,9 +817,8 @@ export function initGradientASCII(container, options = {}) {
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(container);
   const intersection = new IntersectionObserver(entries => {
-    const isIntersecting = entries.some(entry => entry.isIntersecting || entry.intersectionRatio > 0);
-    if (isIntersecting) {
-      visible = true;
+    visible = entries.some(entry => entry.isIntersecting);
+    if (visible) {
       last = 0;
       wake();
     }

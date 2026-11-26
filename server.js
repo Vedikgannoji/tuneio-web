@@ -8,19 +8,18 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Security & Caching Middleware
+// Security Headers Middleware
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';"
+    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self';"
   );
   next();
 });
 
-// JSON body parser
 app.use(express.json());
 
 // API Endpoints
@@ -34,23 +33,28 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Static assets
-app.use(express.static(__dirname, {
-  maxAge: '1h',
-  index: 'index.html'
-}));
+// Explicit Allowlist of Public Site Assets
+const ALLOWLIST = new Map([
+  ['/', 'index.html'],
+  ['/index.html', 'index.html'],
+  ['/styles.css', 'styles.css'],
+  ['/app.js', 'app.js'],
+  ['/gradient-ascii.js', 'gradient-ascii.js'],
+  ['/wordmark.svg', 'wordmark.svg']
+]);
 
-// Fallback to index.html for SPA routes
 app.get('*', (req, res) => {
-  res.sendFile(join(__dirname, 'index.html'));
+  const file = ALLOWLIST.get(req.path);
+  if (!file) {
+    return res.status(404).type('text/plain').send('Not Found');
+  }
+  return res.sendFile(join(__dirname, file), { maxAge: '1h' });
 });
 
-// Start Server
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`[tuneio-web] Server listening at http://localhost:${PORT}`);
 });
 
-// Graceful termination
 process.on('SIGTERM', () => {
   server.close(() => {
     console.log('[tuneio-web] Server shut down gracefully');

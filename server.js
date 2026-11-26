@@ -55,6 +55,16 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`[tuneio-web] Server listening at http://localhost:${PORT}`);
 });
 
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n[tuneio-web] Error: Port ${PORT} is already in use.`);
+    console.error(`Please stop any other process running on port ${PORT}, or set a different port with:`);
+    console.error(`  PORT=3001 npm run dev\n`);
+    process.exit(1);
+  }
+  throw err;
+});
+
 process.on('SIGTERM', () => {
   server.close(() => {
     console.log('[tuneio-web] Server shut down gracefully');
